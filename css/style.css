@@ -12,7 +12,7 @@ body {
 }
 
 .planodefundo {
-    background-image: url('./img/pexels-photo-8181896.avif');
+    background-image: url('../img/pexels-photo-8181896.avif');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
