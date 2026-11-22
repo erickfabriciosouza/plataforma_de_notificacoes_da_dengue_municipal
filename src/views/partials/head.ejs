@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#07535a">
+    <title><%= titulo %> | Dengue Santo Amaro</title>
+    <link rel="icon" href="/img/favicon.png" type="image/png">
+    <% if (typeof mapa !== 'undefined' && mapa) { %>
+        <link rel="stylesheet" href="/bibliotecas/leaflet/leaflet.css">
+    <% } %>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/navegacao.js" defer></script>
+</head>
+<body>
+    <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+    <%- include('navbar') %>

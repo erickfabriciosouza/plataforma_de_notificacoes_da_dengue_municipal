@@ -1,0 +1,89 @@
+<%- include('partials/head', { titulo: 'Painel epidemiológico' }) %>
+<main id="conteudo" class="limite pagina">
+    <header class="abertura">
+        <div>
+            <p class="localidade"><span aria-hidden="true"></span>Santo Amaro, Bahia</p>
+            <h1>Painel epidemiológico</h1>
+            <p>Acompanhe os casos de dengue, o nível de alerta e as condições climáticas no município.</p>
+        </div>
+        <a class="botao botao-secundario" href="/mapa">Ver mapa de focos</a>
+    </header>
+
+    <section class="secao-painel" aria-labelledby="titulo-indicadores">
+        <div class="cabecalho-secao">
+            <h2 id="titulo-indicadores">Indicadores</h2>
+            <div class="segmentos" role="group" aria-label="Recorte dos indicadores">
+                <button type="button" data-recorte="semana" aria-pressed="true">Semana atual</button>
+                <button type="button" data-recorte="4semanas" aria-pressed="false">Últimas 4 semanas</button>
+                <button type="button" data-recorte="ano" aria-pressed="false">Ano vigente</button>
+                <button type="button" data-recorte="historico" aria-pressed="false">Série histórica</button>
+            </div>
+        </div>
+        <p id="estado-painel" class="aviso estado" role="status">Carregando indicadores do InfoDengue…</p>
+        <button id="tentar-novamente" class="botao botao-secundario" type="button" hidden>Tentar novamente</button>
+        <noscript><p class="aviso">Ative o JavaScript para consultar os indicadores e gráficos.</p></noscript>
+
+        <div id="dados-painel" hidden>
+            <p id="periodo" class="texto-secundario periodo"></p>
+            <div class="grade-indicadores">
+                <article class="cartao indicador">
+                    <h3>Casos de dengue</h3>
+                    <p class="numero" id="valor-casos"></p>
+                    <p class="texto-secundario">Notificados / estimados</p>
+                </article>
+                <article class="cartao indicador">
+                    <h3>Nível de alerta</h3>
+                    <p id="valor-nivel" class="nivel"></p>
+                    <p id="detalhe-nivel" class="texto-secundario"></p>
+                </article>
+                <article class="cartao indicador">
+                    <h3>Ritmo de transmissão</h3>
+                    <p class="numero" id="valor-rt"></p>
+                    <p id="detalhe-rt" class="texto-secundario"></p>
+                </article>
+                <article class="cartao indicador">
+                    <h3>Incidência</h3>
+                    <p class="numero" id="valor-incidencia"></p>
+                    <p class="texto-secundario">Casos por 100 mil habitantes</p>
+                </article>
+            </div>
+
+            <div class="cabecalho-secao cabecalho-serie">
+                <div>
+                    <h2>Evolução no período</h2>
+                    <p id="periodo-grafico" class="texto-secundario"></p>
+                </div>
+                <p id="pico-historico" class="texto-secundario" hidden></p>
+            </div>
+            <div class="grade-graficos">
+                <article class="cartao grafico">
+                    <h3>Casos estimados</h3>
+                    <div class="legenda"><span class="amostra amostra-casos" aria-hidden="true"></span>Casos de dengue</div>
+                    <div class="area-grafico"><canvas id="grafico-casos" role="img" aria-label="Gráfico de barras de casos estimados. Os valores estão na tabela abaixo."></canvas></div>
+                </article>
+                <article class="cartao grafico">
+                    <h3>Temperatura e umidade</h3>
+                    <div class="legenda">
+                        <span><i class="amostra amostra-temperatura" aria-hidden="true"></i>Temperatura (°C)</span>
+                        <span><i class="amostra amostra-umidade" aria-hidden="true"></i>Umidade (%)</span>
+                    </div>
+                    <div class="area-grafico"><canvas id="grafico-clima" role="img" aria-label="Gráfico de linhas de temperatura e umidade. Os valores estão na tabela abaixo."></canvas></div>
+                </article>
+            </div>
+            <details class="cartao tabela-dados">
+                <summary>Consultar valores em tabela</summary>
+                <p class="texto-secundario">Um traço indica valor indisponível na fonte.</p>
+                <div class="rolagem-tabela" tabindex="0" role="region" aria-label="Valores dos gráficos">
+                    <table>
+                        <thead><tr><th scope="col">Período</th><th scope="col">Casos estimados</th><th scope="col">Temperatura (°C)</th><th scope="col">Umidade (%)</th></tr></thead>
+                        <tbody id="tabela-serie"></tbody>
+                    </table>
+                </div>
+            </details>
+        </div>
+        <p class="texto-secundario fonte">Fonte: <a href="https://info.dengue.mat.br/alerta/<%= geocodigo %>/dengue">InfoDengue</a><span id="atualizacao" hidden> · Última atualização do painel em <time></time></span></p>
+    </section>
+</main>
+<script src="/bibliotecas/chart.js" defer></script>
+<script src="/js/painel.js" defer></script>
+<%- include('partials/footer') %>

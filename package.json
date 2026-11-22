@@ -1,0 +1,49 @@
+{
+  "name": "dengue-santo-amaro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Painel epidemiológico e mapa comunitário de focos de dengue de Santo Amaro (BA).",
+  "author": "Erick Fabrício Souza dos Santos",
+  "engines": {
+    "node": ">=24.5 <25"
+  },
+  "scripts": {
+    "start": "node --use-env-proxy server.js",
+    "dev": "nodemon --exec \"node --use-env-proxy\" server.js",
+    "seed": "node src/seeds/seed.js"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "bcryptjs": "^3.0.3",
+    "chart.js": "4.5.1",
+    "connect-flash": "^0.1.1",
+    "connect-session-sequelize": "^8.0.6",
+    "dotenv": "^17.4.2",
+    "ejs": "^3.1.10",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.5",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
+    "leaflet": "^1.9.4",
+    "multer": "^2.5.0",
+    "pg": "^8.23.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.8",
+    "sharp": "^0.35.5",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "overrides": {
+    "sequelize": {
+      "uuid": "11.1.1"
+    },
+    "nodemon": {
+      "minimatch": "11.0.9"
+    }
+  },
+  "allowScripts": {
+    "sqlite3@6.0.1": true
+  }
+}

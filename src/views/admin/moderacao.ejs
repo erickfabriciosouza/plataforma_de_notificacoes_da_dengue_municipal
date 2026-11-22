@@ -1,0 +1,90 @@
+<%- include('../partials/head', { titulo: 'Moderação' }) %>
+<main id="conteudo" class="limite pagina">
+    <header class="abertura">
+        <div>
+            <h1>Moderação de focos</h1>
+            <p>Analise os registros da comunidade e acompanhe o status de cada foco.</p>
+        </div>
+        <form action="/admin/sair" method="post">
+            <%- include('../partials/csrf') %>
+            <button class="botao botao-secundario" type="submit">Sair</button>
+        </form>
+    </header>
+    <%- include('../partials/flash') %>
+    <section aria-labelledby="titulo-registros">
+        <div class="cabecalho-secao">
+            <h2 id="titulo-registros">Registros</h2>
+            <nav class="segmentos filtro-admin" aria-label="Filtrar por status">
+                <% for (const [status, rotulo] of Object.entries(situacoes)) { %>
+                    <a href="/admin?status=<%= status %>" <% if (status === filtro) { %>aria-current="page"<% } %>><%= rotulo %> <span><%= contadores[status] ?? 0 %></span></a>
+                <% } %>
+            </nav>
+        </div>
+        <% if (!focos.length) { %>
+            <p class="aviso">Nenhum registro neste status.</p>
+        <% } %>
+        <div class="grade-admin">
+            <% for (const foco of focos) { %>
+                <article class="cartao registro">
+                    <div class="registro-cabecalho">
+                        <h3><%= tiposLocal[foco.tipoLocal] %></h3>
+                        <time class="texto-secundario" datetime="<%= foco.createdAt.toISOString() %>"><%= formatarData(foco.createdAt) %></time>
+                    </div>
+                    <p class="descricao-registro"><%= foco.descricao %></p>
+                    <% if (foco.get('temFoto')) { %>
+                        <a class="foto-registro" href="/admin/focos/<%= foco.id %>/foto" target="_blank" rel="noopener">
+                            <img loading="lazy" src="/admin/focos/<%= foco.id %>/foto" alt="Foto enviada com o registro. Abrir em nova aba.">
+                        </a>
+                    <% } %>
+                    <dl class="dados-registro">
+                        <div>
+                            <dt>Localização</dt>
+                            <dd><a href="https://www.openstreetmap.org/?mlat=<%= foco.latitude %>&amp;mlon=<%= foco.longitude %>#map=17/<%= foco.latitude %>/<%= foco.longitude %>" target="_blank" rel="noopener noreferrer">Ver ponto no OpenStreetMap <span class="sr">(nova aba)</span></a></dd>
+                        </div>
+                        <% if (foco.contato) { %><div><dt>Nome ou contato</dt><dd><%= foco.contato %></dd></div><% } %>
+                        <% if (foco.motivoRejeicao) { %><div><dt>Motivo da rejeição</dt><dd><%= foco.motivoRejeicao %></dd></div><% } %>
+                        <% if (foco.moderadoEm) { %><div><dt>Última moderação</dt><dd><time datetime="<%= foco.moderadoEm.toISOString() %>"><%= formatarData(foco.moderadoEm) %></time></dd></div><% } %>
+                    </dl>
+                    <div class="acoes-registro">
+                        <% if (foco.status === 'pendente') { %>
+                            <form action="/admin/focos/<%= foco.id %>/aprovar" method="post">
+                                <%- include('../partials/csrf') %>
+                                <input type="hidden" name="filtro" value="<%= filtro %>">
+                                <button class="botao botao-primario" type="submit">Aprovar</button>
+                            </form>
+                            <details class="acao-detalhes">
+                                <summary>Rejeitar</summary>
+                                <form class="formulario" action="/admin/focos/<%= foco.id %>/rejeitar" method="post">
+                                    <%- include('../partials/csrf') %>
+                                    <input type="hidden" name="filtro" value="<%= filtro %>">
+                                    <div class="campo">
+                                        <label for="motivo-<%= foco.id %>">Motivo <span>(opcional)</span></label>
+                                        <textarea id="motivo-<%= foco.id %>" name="motivo" maxlength="300" rows="2"></textarea>
+                                    </div>
+                                    <button class="botao botao-secundario" type="submit">Confirmar rejeição</button>
+                                </form>
+                            </details>
+                        <% } %>
+                        <% if (foco.status === 'aprovado') { %>
+                            <form action="/admin/focos/<%= foco.id %>/resolver" method="post">
+                                <%- include('../partials/csrf') %>
+                                <input type="hidden" name="filtro" value="<%= filtro %>">
+                                <button class="botao botao-primario" type="submit">Marcar como resolvido</button>
+                            </form>
+                        <% } %>
+                        <details class="acao-detalhes">
+                            <summary>Excluir</summary>
+                            <form class="formulario" action="/admin/focos/<%= foco.id %>/excluir" method="post">
+                                <%- include('../partials/csrf') %>
+                                <input type="hidden" name="filtro" value="<%= filtro %>">
+                                <p>Este registro será removido permanentemente.</p>
+                                <button class="botao botao-secundario" type="submit">Confirmar exclusão</button>
+                            </form>
+                        </details>
+                    </div>
+                </article>
+            <% } %>
+        </div>
+    </section>
+</main>
+<%- include('../partials/footer') %>

@@ -1,0 +1,96 @@
+<%- include('partials/head', { titulo: 'Mapa de focos', mapa: true }) %>
+<main id="conteudo" class="limite pagina">
+    <header class="abertura">
+        <div>
+            <p class="localidade"><span aria-hidden="true"></span>Santo Amaro, Bahia</p>
+            <h1>Mapa de focos</h1>
+            <p>Consulte os pontos aprovados pela equipe ou indique um possível foco de dengue.</p>
+        </div>
+    </header>
+    <%- include('partials/flash') %>
+    <div class="grade-mapa">
+        <section class="cartao cartao-mapa" aria-labelledby="titulo-mapa">
+            <div class="cabecalho-mapa">
+                <h2 id="titulo-mapa">Localização dos focos</h2>
+                <span class="texto-secundario"><span class="amostra-mapa" aria-hidden="true"></span>Foco aprovado</span>
+            </div>
+            <div id="mapa" aria-label="Mapa interativo de Santo Amaro" role="region"
+                 data-centro-lat="<%= municipio.centro[0] %>" data-centro-lon="<%= municipio.centro[1] %>">
+                <noscript><p class="mapa-sem-js">Ative o JavaScript para interagir com o mapa. As coordenadas podem ser preenchidas no formulário.</p></noscript>
+            </div>
+            <p class="texto-secundario rodape-mapa">Clique no mapa para indicar um local e arraste o marcador para ajustá-lo.</p>
+        </section>
+        <aside class="lateral-mapa" aria-label="Focos e registro">
+            <section class="cartao bloco-mapa" aria-labelledby="titulo-focos">
+                <div class="cabecalho-mapa">
+                    <h2 id="titulo-focos">Focos publicados</h2>
+                    <span class="contagem" aria-label="<%= focos.length %> focos publicados"><%= focos.length %></span>
+                </div>
+                <% if (!focos.length) { %>
+                    <p class="texto-secundario">Nenhum foco aprovado no momento.</p>
+                <% } else { %>
+                    <ul class="lista-focos">
+                        <% for (const foco of focos) { %>
+                            <li><button class="item-foco" type="button" data-lat="<%= foco.latitude %>" data-lon="<%= foco.longitude %>">
+                                <span class="nome-foco"><%= foco.descricao %></span>
+                                <span class="tipo-foco"><%= tiposLocal[foco.tipoLocal] %></span>
+                            </button></li>
+                        <% } %>
+                    </ul>
+                <% } %>
+            </section>
+            <section class="cartao bloco-mapa" aria-labelledby="titulo-registro">
+                <h2 id="titulo-registro">Registrar um foco</h2>
+                <p class="texto-secundario">O registro passa por análise antes de aparecer no mapa.</p>
+                <% if (avisos.length) { %>
+                    <div class="aviso aviso-erro" role="alert"><ul>
+                        <% for (const aviso of avisos) { %><li><%= aviso %></li><% } %>
+                    </ul></div>
+                <% } %>
+                <form class="formulario" action="/focos" method="post" enctype="multipart/form-data">
+                    <%- include('partials/csrf') %>
+                    <fieldset class="localizacao">
+                        <legend>Localização</legend>
+                        <button type="button" id="usar-localizacao" class="botao botao-secundario" hidden>Usar minha localização</button>
+                        <p class="texto-secundario estado-local" id="estado-local" role="status">Selecione um ponto ou informe as coordenadas.</p>
+                        <details id="coordenadas" <% if (avisos.length) { %>open<% } %>>
+                            <summary>Informar coordenadas</summary>
+                            <div class="grade-coordenadas">
+                                <div class="campo"><label for="latitude">Latitude</label><input id="latitude" name="latitude" inputmode="decimal" maxlength="24" placeholder="-12.5457" value="<%= campos.latitude || '' %>"></div>
+                                <div class="campo"><label for="longitude">Longitude</label><input id="longitude" name="longitude" inputmode="decimal" maxlength="24" placeholder="-38.7135" value="<%= campos.longitude || '' %>"></div>
+                            </div>
+                        </details>
+                    </fieldset>
+                    <div class="campo">
+                        <label for="tipo-local">Tipo de local</label>
+                        <select id="tipo-local" name="tipoLocal" required>
+                            <option value="">Selecione</option>
+                            <% for (const [valor, rotulo] of Object.entries(tiposLocal)) { %>
+                                <option value="<%= valor %>" <% if (campos.tipoLocal === valor) { %>selected<% } %>><%= rotulo %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="descricao">Descrição</label>
+                        <textarea id="descricao" name="descricao" minlength="10" maxlength="300" rows="3" placeholder="Ex.: água parada ao lado da praça" aria-describedby="ajuda-descricao" required><%= campos.descricao || '' %></textarea>
+                        <small class="texto-secundario" id="ajuda-descricao">De 10 a 300 caracteres.</small>
+                    </div>
+                    <div class="campo">
+                        <label for="foto">Foto <span>(opcional)</span></label>
+                        <input id="foto" type="file" name="foto" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" aria-describedby="ajuda-foto">
+                        <small class="texto-secundario" id="ajuda-foto">JPG, PNG ou WebP, até 5 MB. Visível à equipe.</small>
+                    </div>
+                    <div class="campo">
+                        <label for="contato">Nome ou contato <span>(opcional)</span></label>
+                        <input id="contato" name="contato" maxlength="150" aria-describedby="ajuda-contato" value="<%= campos.contato || '' %>">
+                        <small class="texto-secundario" id="ajuda-contato">Visível somente à equipe.</small>
+                    </div>
+                    <button class="botao botao-primario" type="submit">Enviar registro</button>
+                </form>
+            </section>
+        </aside>
+    </div>
+</main>
+<script src="/bibliotecas/leaflet/leaflet.js" defer></script>
+<script src="/js/mapa.js" defer></script>
+<%- include('partials/footer') %>

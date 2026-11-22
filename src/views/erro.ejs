@@ -1,0 +1,9 @@
+<%- include('partials/head', { titulo: 'Solicitação indisponível' }) %>
+<main id="conteudo" class="limite pagina pagina-estreita">
+    <section class="cartao cartao-login">
+        <h1><%= status === 403 ? 'Formulário protegido' : 'Solicitação indisponível' %></h1>
+        <p class="texto-secundario"><%= mensagem %></p>
+        <a class="botao botao-primario" href="/">Voltar ao painel</a>
+    </section>
+</main>
+<%- include('partials/footer') %>

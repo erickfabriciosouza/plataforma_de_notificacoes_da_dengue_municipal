@@ -1,0 +1,20 @@
+<header class="barra">
+    <div class="limite barra-interna">
+        <a class="marca" href="/">
+            <span class="marca-simbolo" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span>Dengue <strong>Santo Amaro</strong></span>
+        </a>
+        <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu" hidden>
+            <span class="menu-icone" aria-hidden="true"></span>
+            Menu
+        </button>
+        <nav id="menu" class="menu-links" aria-label="Navegação principal">
+            <a href="/" <% if (caminho === '/') { %>aria-current="page"<% } %>>Painel</a>
+            <a href="/mapa" <% if (caminho === '/mapa' || caminho === '/focos') { %>aria-current="page"<% } %>>Mapa de Focos</a>
+            <a href="/sobre" <% if (caminho === '/sobre') { %>aria-current="page"<% } %>>Sobre</a>
+            <% if (administradorLogado) { %>
+                <a href="/admin" <% if (caminho === '/admin') { %>aria-current="page"<% } %>>Moderação</a>
+            <% } %>
+        </nav>
+    </div>
+</header>

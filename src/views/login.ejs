@@ -1,0 +1,22 @@
+<%- include('partials/head', { titulo: 'Acesso administrativo' }) %>
+<main id="conteudo" class="limite pagina pagina-estreita">
+    <section class="cartao cartao-login" aria-labelledby="titulo-login">
+        <h1 id="titulo-login">Acesso administrativo</h1>
+        <p class="texto-secundario">Entre para analisar os registros do mapa de focos.</p>
+        <%- include('partials/flash') %>
+        <% if (erroLogin) { %><p class="aviso aviso-erro" role="alert"><%= erroLogin %></p><% } %>
+        <form class="formulario" action="/login" method="post">
+            <%- include('partials/csrf') %>
+            <div class="campo">
+                <label for="email">E-mail</label>
+                <input id="email" name="email" type="email" autocomplete="username" value="<%= email %>" maxlength="254" required>
+            </div>
+            <div class="campo">
+                <label for="senha">Senha</label>
+                <input id="senha" name="senha" type="password" autocomplete="current-password" maxlength="72" required>
+            </div>
+            <button class="botao botao-primario" type="submit">Entrar</button>
+        </form>
+    </section>
+</main>
+<%- include('partials/footer') %>

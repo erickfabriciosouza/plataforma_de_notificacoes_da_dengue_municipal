@@ -1,0 +1,14 @@
+    <footer class="rodape">
+        <div class="limite rodape-interno">
+            <span>Dengue Santo Amaro <span class="rodape-local">· Bahia</span></span>
+            <div class="rodape-links">
+                <% if (contatoEmail) { %><a href="mailto:<%= encodeURIComponent(contatoEmail).replace('%40', '@') %>">Fale com a equipe</a><% } %>
+                <% if (!administradorLogado) { %><a href="/login">Área administrativa</a><% } %>
+            </div>
+        </div>
+    </footer>
+    <% if (contatoWhatsapp) { %>
+        <a class="whatsapp" href="https://wa.me/<%= contatoWhatsapp %>" target="_blank" rel="noopener noreferrer" aria-label="Fale com a equipe no WhatsApp (nova aba)" title="WhatsApp"><img src="/img/whatsapp.png" alt="" width="22" height="22"></a>
+    <% } %>
+</body>
+</html>
