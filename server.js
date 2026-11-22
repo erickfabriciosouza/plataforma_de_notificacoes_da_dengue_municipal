@@ -24,6 +24,7 @@ async function iniciar() {
 
     app.use(helmet({
         strictTransportSecurity: producao ? undefined : false,
+        referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
